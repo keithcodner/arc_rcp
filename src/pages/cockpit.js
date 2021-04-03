@@ -1,9 +1,11 @@
 import React from 'react'
 
+import {Layout} from '../layout';
+
 const CockPit = () => (
-    <div>
-        This is the Cockpit
-    </div>
+    <Layout>
+        This is the Cockpit xx
+    </Layout>
 );
 
 export default CockPit;

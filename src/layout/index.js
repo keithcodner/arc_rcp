@@ -1,9 +1,12 @@
 import React from 'react'
 
-const Layout = () => (
-    <div>
-        This is the layout
+import Nav from './nav'
+
+const Layout = (props) => (
+    <div >
+        
+        {props.children}
     </div>
 )
 
-export {Layout};
+export {Layout, Nav};
