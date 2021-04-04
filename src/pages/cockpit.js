@@ -4,7 +4,8 @@ import {Layout} from '../layout';
 
 const CockPit = () => (
     <Layout>
-        This is the Cockpit xx
+        <h1 className='text-2xl'>Cockpit: Remote Control</h1>
+        <p>This is the Cockpit xx</p>
     </Layout>
 );
 

@@ -5,7 +5,7 @@ import{
   Route
 } from "react-router-dom"
 
-import {CockPit, Register, Settings} from './pages';
+import {CockPit, Register, Settings, RegisterUser} from './pages';
 import {Nav} from './layout';
 
 
@@ -17,6 +17,9 @@ function App() {
         
         <Route exact path='/register'>
           <Register />
+        </Route>
+        <Route exact path='/registerUser'>
+          <RegisterUser />
         </Route>
         <Route exact path='/settings'>
           <Settings />
