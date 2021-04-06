@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-//import {postArcData} from '../utils/sh'
+import axios from 'axios'
+import {postArcData, getCurrDateTime, genRUserANID} from '../utils/sh'
 import {Layout} from '../layout';
 
 class Register  extends Component{
@@ -7,46 +8,25 @@ class Register  extends Component{
     constructor(props){
         super(props)
         this.state={
-            "r_usr_an_id" : "ASDF124",
-    "r_usr_code_name" : "ARCANE4545",
-    "r_usr_ip" : "2.3.4.6",
-    "r_usr_status" : "In-Active",
-    "r_usr_type" : "DevBot",
-    "r_usr_op1" : "0",
-    "r_usr_op2" : "0",
-    "r_usr_date_created" : "2021-03-05T05:55:57.000Z"
+            r_usr_an_id : null,
+            r_usr_code_name : null,
+            r_usr_ip : "1.1.1.1",
+            r_usr_status : "Active",
+            r_usr_type : "DevBot",
+            r_usr_op1 : "",
+            r_usr_op2 : "",
+            r_usr_date_created : getCurrDateTime()
         }
     }
    
     handleSubmit = (event) =>{
         event.preventDefault()
-        const  data = this.state
-        const  uri = 'http://localhost:3000/api/arc_db/arc_r_users/r_usrs';
-        alert(data);
-        console.log(data);
-        //postArcData(uri, data);
-
-        try{
-             let result =  fetch('http://localhost:3000/api/arc_db/arc_r_users/r_usrs',{
-                method: 'post',
-                mode: 'no-cors',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body:JSON.stringify({"r_usr_an_id" : "ASDF124",
-                "r_usr_code_name" : "ARCANE4545",
-                "r_usr_ip" : "2.3.4.6",
-                "r_usr_status" : "In-Active",
-                "r_usr_type" : "DevBot",
-                "r_usr_op1" : "0",
-                "r_usr_op2" : "0",
-                "r_usr_date_created" : "2021-03-05T05:55:57.000Z"})
-            });
-        }catch(e){
-            console.log(e)
-        }
-    
+        const data = this.state
+        const uri = 'http://localhost:3000/api/arc_db/arc_r_users/r_usrs'
+        
+        alert(data)
+        console.log(data)
+        postArcData(uri, this.state)
     }
     
     handleInputChange = (event) =>{
@@ -59,7 +39,7 @@ class Register  extends Component{
     
 
     render(){
-        const{robot_name} = this.state
+        //const{r_usr_code_name} = this.state
 
         return(
         <div className="flex flex-col space-y-8 w-1/2 m-auto">
