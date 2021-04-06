@@ -17,23 +17,57 @@ export async function postArcData(apiLink, data){
 
 }
 
-export async function genRUserANID(apiLink, data){
+export async function patchArcData(apiLink, data){
     try{
-        
+        axios
+            .put(apiLink, data)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error =>{
+                console.log(error)
+            })
     }catch(e){
         console.log(e)
     }
 
 }
 
-export async function genCUserANID(apiLink, data){
+export async function deleteArcData(apiLink, data){
     try{
-        
+        axios
+            .delete(apiLink, data)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error =>{
+                console.log(error)
+            })
     }catch(e){
         console.log(e)
     }
 
 }
+
+export async function getArcData(apiLink){
+    try{
+        var self = this;
+        axios.get(apiLink)
+        .then(function (response) {
+        console.log(response);
+        self.setState({events: response.data})
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+
+        return self
+    }catch(e){
+        console.log(e)
+    }
+
+}
+
 
 //------------------NON - ASYNC-----------------------------
 

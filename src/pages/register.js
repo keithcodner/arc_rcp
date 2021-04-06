@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-import {postArcData, getCurrDateTime, genRUserANID} from '../utils/sh'
+import {postArcData, getCurrDateTime, getArcData} from '../utils/sh'
 import {Layout} from '../layout';
 
 class Register  extends Component{
@@ -23,10 +23,12 @@ class Register  extends Component{
         event.preventDefault()
         const data = this.state
         const uri = 'http://localhost:3000/api/arc_db/arc_r_users/r_usrs'
+        const uri2 = 'http://localhost:3000/api/arc_db/arc_r_users/'
+
         
         alert(data)
-        console.log(data)
-        postArcData(uri, this.state)
+        console.log(getArcData(uri2))
+        //postArcData(uri, this.state)
     }
     
     handleInputChange = (event) =>{
