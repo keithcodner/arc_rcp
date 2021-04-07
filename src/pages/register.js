@@ -1,14 +1,16 @@
 import React, {Component} from 'react'
-import axios from 'axios'
-import {postArcData, getCurrDateTime, getArcData} from '../utils/sh'
-import {Layout} from '../layout';
+import {postArcData, 
+    getCurrDateTime, 
+    getArcData, 
+    anID_R_Gen, 
+    anID_C_Gen} from '../utils/sh'
 
 class Register  extends Component{
 
     constructor(props){
         super(props)
         this.state={
-            r_usr_an_id : null,
+            r_usr_an_id : anID_R_Gen(),
             r_usr_code_name : null,
             r_usr_ip : "1.1.1.1",
             r_usr_status : "Active",
@@ -19,16 +21,19 @@ class Register  extends Component{
         }
     }
    
-    handleSubmit = (event) =>{
+    handleSubmit = async (event) =>{
         event.preventDefault()
         const data = this.state
         const uri = 'http://localhost:3000/api/arc_db/arc_r_users/r_usrs'
         const uri2 = 'http://localhost:3000/api/arc_db/arc_r_users/'
-
+        const uri3 = 'http://localhost:3000/api/arc_db/arc_r_users/r_usr_an_id/'
         
-        alert(data)
-        console.log(getArcData(uri2))
+        //alert(data)
+        //console.log(getArcData(uri2))
         //postArcData(uri, this.state)
+        //console.log(anIDGen(uri3))
+        let mmm = await anID_R_Gen(uri3)
+        console.log(mmm)
     }
     
     handleInputChange = (event) =>{
