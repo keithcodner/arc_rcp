@@ -113,6 +113,23 @@ export const anID_C_Gen = async(apiLink='http://localhost:3000/api/arc_db/arc_c_
     return  genID
 }
 
+export const anID_Cmd_Lst_Gen = async(apiLink='http://localhost:3000/api/arc_db/arc_r_users/') => {
+   
+    let genID =  ''
+    let response = ''
+
+    genID = createANID(10)
+    response = axios.get(apiLink + genID)
+    if(response.status === '200'){
+        genID = createANID(10)
+        return  genID
+    }else if(response.status === '404'){
+        return  genID
+    }
+
+    return  genID
+}
+
 
 //------------------NON - ASYNC-----------------------------
 
