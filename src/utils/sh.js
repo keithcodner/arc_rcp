@@ -49,19 +49,11 @@ export async function deleteArcData(apiLink, data){
 
 }
 
-export async function getArcData(apiLink){
+export const getArcData = async(apiLink) => {
     try{
-        var self = this;
-        axios.get(apiLink)
-        .then(function (response) {
-        console.log(response);
-        self.setState({events: response.data})
-        })
-        .catch(function (error) {
-        console.log(error);
-        });
-
-        return self
+        let response= ''
+        response = axios.get(apiLink)
+        return response
     }catch(e){
         console.log(e)
     }

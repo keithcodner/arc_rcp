@@ -12,7 +12,7 @@ class Register  extends Component{
             "r_usr_code_name" : "",
             "r_usr_ip" : "1.1.1.1",
             "r_usr_status" : "Active",
-            "r_usr_type" : "DevBot",
+            "r_usr_type" : "",
             "r_usr_op1" : "",
             "r_usr_op2" : "",
             "r_usr_date_created" : getCurrDateTime()
