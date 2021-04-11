@@ -11,6 +11,10 @@ const navs = [
         name:"Settings"
     },
     {
+        path:"/controls",
+        name:"Configure Controls"
+    },
+    {
         path:"/register",
         name:"Register Robot"
     },
@@ -18,6 +22,7 @@ const navs = [
         path:"/registerUser",
         name:"Create User"
     }
+    
 ]
 
 const Nav = () => (
