@@ -3,7 +3,8 @@ import {postArcData,
     getCurrDateTime, 
     getArcData,
     anID_Cmd_Lst_Gen} from '../utils/sh'
-    import '../../src/lib/snes-ctrl/styles.css'
+import '../../src/lib/snes-ctrl/styles.css'
+import { v4 as uuidv4 } from 'uuid';
 
 
 class Cockpit extends Component{
