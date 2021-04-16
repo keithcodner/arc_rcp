@@ -5,7 +5,7 @@ import{
   Route
 } from "react-router-dom"
 
-import {CockPit, Register, Settings, RegisterUser} from './pages';
+import {CockPit, Register, Settings, RegisterUser, Controls} from './pages';
 import {Nav, Footer} from './layout';
 
 
@@ -20,6 +20,9 @@ function App() {
           </Route>
           <Route exact path='/registerUser'>
             <RegisterUser />
+          </Route>
+          <Route exact path='/controls'>
+            <Controls />
           </Route>
           <Route exact path='/settings'>
             <Settings />

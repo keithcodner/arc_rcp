@@ -58,9 +58,18 @@ class Controls extends Component{
     render(){
         return(
         <div className="flex flex-col space-y-8 w-1/2 m-auto">
-            
+            test 
             <form onSubmit={this.handleSubmit}>
-               
+                <div class="flex flex-wrap">
+                    <div class="w-1/4 h-20 flex items-center bg-green-100">First Column</div>
+                    <div class="w-1/4 h-20 flex items-center bg-green-200">2nd Column</div>
+                    <div class="w-1/4 h-20 flex items-center bg-green-300">3rd Column</div>
+                    <div class="w-1/4 h-20 flex items-center bg-green-400">4th Column</div>
+                    <div class="w-1/4 h-20 flex items-center bg-green-400">First Column</div>
+                    <div class="w-1/4 h-20 flex items-center bg-green-300">2nd Column</div>
+                    <div class="w-1/4 h-20 flex items-center bg-green-200">3rd Column</div>
+                    <div class="w-1/4 h-20 flex items-center bg-green-100">4th Column</div>
+                </div>
             </form>
         </div>
         )
