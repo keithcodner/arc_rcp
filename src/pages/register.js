@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {postArcData, 
         getCurrDateTime, 
-        anID_R_Gen} from '../utils/sh'
+        anID_R_Gen,
+        btnStyle} from '../utils/sh'
 
 class Register  extends Component{
 
@@ -75,7 +76,7 @@ class Register  extends Component{
                     <input type="text" className="p-2 rounded" onChange={this.handleInputChange} name="r_usr_op2"/>
                 </div>
 
-                <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                <button className={btnStyle}>
                 Submit
                 </button>
             </form>
