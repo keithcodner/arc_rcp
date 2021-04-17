@@ -21,6 +21,8 @@ class RegisterUser extends Component{
             "c_usr_type":"User",
             "c_usr_date_created": getCurrDateTime()
         }
+
+        //localStorage.setItem("r_data","{}")
     }
 
     componentDidMount = async () =>{

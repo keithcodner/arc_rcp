@@ -33,7 +33,7 @@ class Cockpit extends Component{
 
         const getR_Name_And_ID = await getArcData('http://localhost:3000/api/arc_db/arc_r_users/')
 
-        localStorage.setItem("cmd_lst_data", JSON.stringify(getR_Name_And_ID.data));
+        //localStorage.setItem("cmd_lst_data", JSON.stringify(getR_Name_And_ID.data));
     }
 
     componentWillUnmount = async (event) =>{
