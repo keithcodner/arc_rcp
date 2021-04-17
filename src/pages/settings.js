@@ -16,6 +16,8 @@ class Settings extends Component{
             "cmd_lst_type" : "Action",
             "cmd_lst_date_created" : getCurrDateTime()
         }
+
+        localStorage.setItem("r_data","{}")
     }
 
     componentDidMount = async () =>{
