@@ -12,7 +12,7 @@ function ControlsComponent(){
     const [appVars, setAppVars] = useState({
         setOrNotSet : "Not Set",
         red_or_Green_Txt : "text-red-700 font-bold text-lg",
-        default_option: '<option value="0"  >-- Pick Control --</option>'
+        default_option: '<option value="0"  > -- Pick Control -- </option>'
     });
 
     const [c_usr_data, setC_Usr_Data] = useState(null)
@@ -144,7 +144,7 @@ function ControlsComponent(){
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Arrow Down: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_down">
-                                {appVars.default_option} {c_cmd_lst_data}
+                                {appVars.default_option, c_cmd_lst_data}
                              </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
@@ -156,7 +156,7 @@ function ControlsComponent(){
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Arrow Right: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_right">
-                                {appVars.default_option} {c_cmd_lst_data}
+                                {appVars.default_option} {c_cmd_lst_data} 
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
