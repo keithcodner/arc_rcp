@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {postArcData, 
         getCurrDateTime, 
         anID_R_Gen,
-        btnStyle} from '../utils/sh'
+        btnStyle,
+        arc_r_usrs__GET} from '../utils/sh'
 
 class Register  extends Component{
 
@@ -28,9 +29,8 @@ class Register  extends Component{
     handleSubmit = async (event) =>{
         event.preventDefault()
         const data = this.state
-        const uri = 'http://localhost:3000/api/arc_db/arc_r_users/r_usrs'
         
-        postArcData(uri, data)
+        postArcData(arc_r_usrs__GET, data)
         console.log(data)
         window.location.reload();
     }

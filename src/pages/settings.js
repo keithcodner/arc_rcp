@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {postArcData, 
     getCurrDateTime, 
     getArcData,
-    anID_Cmd_Lst_Gen} from '../utils/sh'
+    anID_Cmd_Lst_Gen,
+    arc_cmd_list_table__POST} from '../utils/sh'
 
 
 class Settings extends Component{
@@ -33,9 +34,8 @@ class Settings extends Component{
     handleSubmit = async (event) =>{
         event.preventDefault()
         const data = this.state
-        const uri = 'http://localhost:3000/api/arc_db/arc_cmd_list_table/cmd_list_item'
         
-        postArcData(uri, data)
+        postArcData(arc_cmd_list_table__POST, data)
         console.log(data)
         window.location.reload();
     }

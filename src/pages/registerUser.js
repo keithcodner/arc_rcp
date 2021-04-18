@@ -2,7 +2,9 @@ import React, {Component} from 'react'
 import {postArcData, 
     getCurrDateTime, 
     getArcData,
-    anID_C_Gen} from '../utils/sh'
+    anID_C_Gen,
+    arc_r_usrs__GET,
+    arc_c_usrs__POST} from '../utils/sh'
 
 class RegisterUser extends Component{
     constructor(props){
@@ -29,7 +31,7 @@ class RegisterUser extends Component{
         const getC_USR_AN_ID = await anID_C_Gen()
         this.setState({"c_usr_an_id": getC_USR_AN_ID})
 
-        const getR_Name_And_ID = await getArcData('http://localhost:3000/api/arc_db/arc_r_users/')
+        const getR_Name_And_ID = await getArcData(arc_r_usrs__GET)
 
         localStorage.setItem("r_data", JSON.stringify(getR_Name_And_ID.data));
     }
@@ -41,9 +43,8 @@ class RegisterUser extends Component{
     handleSubmit = async (event) =>{
         event.preventDefault()
         const data = this.state
-        const uri = 'http://localhost:3000/api/arc_db/arc_c_users/c_usrs'
         
-        postArcData(uri, data)
+        postArcData(arc_c_usrs__POST, data)
         console.log(data)
         window.location.reload();
     }

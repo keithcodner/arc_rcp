@@ -3,7 +3,53 @@ import axios from 'axios'
 //------------------GLOBAL VALS-----------------------------
 export const btnStyle = 'bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded'
 
-//------------------ASYNC-----------------------------
+//------------------APP SETTINGS -----------------------------
+export const api_domain = 'localhost',
+ api_port = '3000'
+
+//------------------API LINKS -----------------------------
+export const arc_c_usrs__GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_c_users',
+ arc_c_usrs__PATCH = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_c_users/c_usr_id/',
+ arc_c_usrs__POST = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_c_users/c_usrs',
+ arc_c_usrs__DEL = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_c_users/c_usr_id/',
+ arc_cmd_list_table__GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_list_table/',
+ arc_cmd_list_table__PATCH = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_list_table/cmd_lst_id/',
+ arc_cmd_list_table__POST = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_list_table/cmd_list_item',
+ arc_cmd_list_table__DEL = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_list_table/cmd_list_item_id/',
+ arc_cmd_table__GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_table/',
+ arc_cmd_table__PATCH = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_table/cmd_id/',
+ arc_cmd_table__POST = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_table/mkcmd',
+ arc_cmd_table__DEL = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_table/r_usr_id/',
+ arc_ctrl_table__GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/',
+ arc_ctrl_table__PATCH = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/ctrl_id/',
+ arc_ctrl_table__POST = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/mk_ctrl',
+ arc_ctrl_table__DEL = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/ctrl_id/',
+ arc_r_usrs__GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_r_users/',
+ arc_r_usrs__PATCH = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_r_users/r_usr_id/',
+ arc_r_usrs__POST = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_r_users/r_usrs',
+ arc_r_usrs__DEL = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_r_users/r_usr_id/',
+ arc_sys_settings__GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_sys_settings',
+ arc_sys_settings__PATCH = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_sys_settings/set_id/',
+ arc_sys_settings__POST = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_sys_settings/mk_settings',
+ arc_sys_settings__DEL = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_sys_settings/set_id/',
+
+ //-----------------------------Search by API Alpha Numeric ID's----------------------------------------------
+ arc_c_usrs__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_c_users/c_usr_an_id/',
+ arc_r_usrs__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_r_users/r_usr_an_id/',
+ arc_sys_settings__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_sys_settings/set_an_id/',
+ arc_ctrl_table__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/ctrl_id/',
+ arc_cmd_table__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_table/cmd_id/',
+ arc_cmd_list_table__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_list/cmd_lst_id/',
+
+ //-----------------------------Search by API ID's----------------------------------------------
+ arc_c_usrs__ID_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_c_users/c_usr_id/',
+ arc_r_usrs__ID_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_r_users/r_usr_id/',
+ arc_sys_settings__ID_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_sys_settings/set_id/',
+ arc_ctrl_table__ID_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/ctrl_id/',
+ arc_cmd_table__ID_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_table/cmd_id/',
+ arc_cmd_list_table__ID_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_list/cmd_lst_an_id/'
+
+//------------------ASYNC FUNCTIONS-----------------------------
 export async function postArcData(apiLink, data){
     try{
         axios
@@ -82,7 +128,7 @@ export async function getWhereArcData(apiLink, data){
 
 }
 
-export const anID_R_Gen = async(apiLink='http://localhost:3000/api/arc_db/arc_r_users/r_usr_an_id/') => {
+export const anID_R_Gen = async(apiLink=arc_r_usrs__AN_GET) => {
    
         let genID =  ''
         let response = ''
@@ -99,7 +145,7 @@ export const anID_R_Gen = async(apiLink='http://localhost:3000/api/arc_db/arc_r_
         return  genID
 }
 
-export const anID_C_Gen = async(apiLink='http://localhost:3000/api/arc_db/arc_c_users/c_usr_an_id/') => {
+export const anID_C_Gen = async(apiLink=arc_c_usrs__AN_GET) => {
    
     let genID =  ''
     let response = ''
@@ -116,7 +162,7 @@ export const anID_C_Gen = async(apiLink='http://localhost:3000/api/arc_db/arc_c_
     return  genID
 }
 
-export const anID_Cmd_Lst_Gen = async(apiLink='http://localhost:3000/api/arc_db/arc_r_users/') => {
+export const anID_Cmd_Lst_Gen = async(apiLink=arc_r_usrs__GET) => {
    
     let genID =  ''
     let response = ''
@@ -134,7 +180,7 @@ export const anID_Cmd_Lst_Gen = async(apiLink='http://localhost:3000/api/arc_db/
 }
 
 
-//------------------NON - ASYNC-----------------------------
+//------------------NON - ASYNC FUNCTIONS-----------------------------
 
 export function getCurrDateTime(){
     try{
