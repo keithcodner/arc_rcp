@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react'
-import {btnStyle} from '../utils/sh'
+import {postArcData, btnStyle, anID_C_Gen} from '../utils/sh'
 
 function ControlsComponent(){
     
-    const setOrNotSet = 'Not Set'
 
-    let red_or_Green_Txt = 'text-red-700'
+    const [appVars, setAppVars] = useState({
+        setOrNotSet : "Not Set",
+        red_or_Green_Txt : "text-red-700 font-bold text-lg",
+        ctrl_post_uri: 'http://localhost:3000/api/arc_db/arc_ctrl_table/mk_ctrl'
+    });
 
     const [c_usr_data, setC_Usr_Data] = useState(null)
     const [c_cmd_lst_data, setC_Cmd_List] = useState(null)
@@ -59,25 +62,43 @@ function ControlsComponent(){
     async function handleSubmit(event) {
         event.preventDefault();
         setHandleFieldChange({
-            [event.target.name]: event.target.value
+            ...ctrl_fields, [event.target.name]: event.target.value
         })
+
+        postArcData(appVars.ctrl_post_uri, ctrl_fields)
+        console.log(ctrl_fields)
     }
 
     async function handleFieldChange(event) {
+
+        const getCtrl_AN_ID = await anID_C_Gen()
         setHandleFieldChange({
-            ...ctrl_fields, [event.target.name]: event.target.value
+            ...ctrl_fields, 
+            [event.target.name]: event.target.value,
+            ctrl_an_id: getCtrl_AN_ID
         })
+
+    
     }
 
     async function handleFieldChange_usr(event) {
         setHandleFieldChange({
             ...ctrl_fields, [event.target.name]: event.target.value
         })
-        red_or_Green_Txt = 'text-green-700'
+
+        setAppVars(newState => {
+            return { 
+                setOrNotSet: newState = "Set!",
+                red_or_Green_Txt : newState = "text-green-700 font-bold text-lg" 
+            }
+        })
+
+        
     }
 
     async function handleC_Usr_Set() {
         console.log(ctrl_fields)
+        
     }
     
    
@@ -92,6 +113,7 @@ function ControlsComponent(){
                          </div>
                         <div className="w-1/4 h-20 flex items-center">
                             <select className="p-2 rounded" name="c_usr_an_id" onChange={handleFieldChange_usr}>
+                            <option value="0"  >-- Pick User --</option>
                                 {c_usr_data}
                              </select>
                         </div>
@@ -101,7 +123,7 @@ function ControlsComponent(){
                             </button> 
                         </div>
                         <div className="w-1/4 h-20 flex items-center">
-                            <span className={red_or_Green_Txt}>{setOrNotSet}</span>
+                            <span className={appVars.red_or_Green_Txt}>{appVars.setOrNotSet}</span>
                         </div>
                 </div>
             </div>
@@ -111,79 +133,79 @@ function ControlsComponent(){
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                             <label htmlFor=""><b>Arrow Up: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_up">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                              </select>
                          </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Arrow Down: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_down">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                              </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Arrow Left: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_left">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Arrow Right: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_right">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button A: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_btn_a">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button B: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_btn_b">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button X: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_btn_x">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button Y: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_btn_y">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button Index-Left: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_index_left">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button Index-Right: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_index_right">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button Start: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_btn_start">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Button Select: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_btn_select">
-                                {c_cmd_lst_data}
+                                <option value="0"  >-- Pick Control --</option> {c_cmd_lst_data}
                             </select>
                         </div>
                         
 
                         <button className={btnStyle}>
-                            Submit
+                            Submit/Update
                         </button> 
                 </form>
             </div>
