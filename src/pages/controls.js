@@ -13,16 +13,14 @@ import {postArcData,
 
 function ControlsComponent(){
     
-    let createdOrUpdate = 'create'
-
+    var createdOrUpdate = 'create'
+    const [c_usr_data, setC_Usr_Data] = useState(null)
+    const [c_cmd_lst_data, setC_Cmd_List] = useState(null)
     const [appVars, setAppVars] = useState({
         setOrNotSet : "Not Set",
         red_or_Green_Txt : "text-red-700 font-bold text-lg",
         default_option: <option value="0"  >-- Pick Control --</option>
     });
-
-    const [c_usr_data, setC_Usr_Data] = useState(null)
-    const [c_cmd_lst_data, setC_Cmd_List] = useState(null)
     const [ctrl_fields, setHandleFieldChange] = useState({
         ctrl_an_id : "0",
         c_usr_an_id : "0",
@@ -72,62 +70,55 @@ function ControlsComponent(){
 
     async function handleSubmit(event) {
         event.preventDefault();
-
-        if(createdOrUpdate == 'create'){
+        
+        const cus = localStorage.getItem('createOrUpdate_State')
+        
+        if(cus === 'create'){
             setHandleFieldChange({
                 ...ctrl_fields, [event.target.name]: event.target.value
             })
     
             postArcData(arc_ctrl_table__POST, ctrl_fields)
+            alert("Your controls have been created!")
             
-        }else if(createdOrUpdate == 'update'){
+        }else if(cus === 'update'){
             setHandleFieldChange({
                 ...ctrl_fields, [event.target.name]: event.target.value
             })
     
-            //patchArcData(arc_ctrl_table__POST, ctrl_fields)
-            console.log(ctrl_fields)
+            //since we can only update by id, we need to get the id
+            //patchArcData(arc_ctrl_table__POST, ctrl_fields, ctrl_fields.ctrl_an_id)
+            alert("Your controls have been updated!")
         }
     }
 
     async function handleFieldChange(event) {
 
         const getCtrl_AN_ID = await anID_C_Gen()
-        setHandleFieldChange({
-            ...ctrl_fields, 
-            [event.target.name]: event.target.value,
-            ctrl_an_id: getCtrl_AN_ID
+        setHandleFieldChange(prevState => {
+            return{
+                ...prevState, 
+                [event.target.name]: event.target.value,
+                ctrl_an_id: getCtrl_AN_ID
+            }
         })
-
-    
-    }
-
-    async function resetSelectToDefault(){
-        $('select[name="ctrl_arrow_up"]').val('0');
-        $('select[name="ctrl_arrow_down"]').val('0');
-        $('select[name="ctrl_arrow_left"]').val('0');
-        $('select[name="ctrl_arrow_right"]').val('0');
-        $('select[name="ctrl_btn_a"]').val('0');
-        $('select[name="ctrl_btn_b"]').val('0');
-        $('select[name="ctrl_btn_x"]').val('0');
-        $('select[name="ctrl_btn_y"]').val('0');
-        $('select[name="ctrl_btn_select"]').val('0');
-        $('select[name="ctrl_btn_start"]').val('0');
-        $('select[name="ctrl_index_left"]').val('0');
-        $('select[name="ctrl_index_right"]').val('0');
+        
+        
     }
 
     async function handleFieldChange_usr(event) {
 
+        // clear fields and assume we're creating, logic latter down will determine if we need to update
         createdOrUpdate = 'create'
         resetSelectToDefault()
+        resetSelectToDefaultObject()
 
-
+        //chekc if this person needs an update
         const check_c_usr_ANID = event.target.value
         const check_ctrl_ANID_raw = await fetch(arc_ctrl_table__GET) 
         const check_ctrl_ANID_json = await check_ctrl_ANID_raw.json()
         const check_ctrl_ANID_loop = Object.entries(check_ctrl_ANID_json).map(key => {
-            if(key[1].c_usr_an_id == check_c_usr_ANID){
+            if(key[1].c_usr_an_id === check_c_usr_ANID){
                 createdOrUpdate = 'update'
 
                 $('select[name="ctrl_arrow_up"]').val(key[1].ctrl_arrow_up);
@@ -143,50 +134,101 @@ function ControlsComponent(){
                 $('select[name="ctrl_index_left"]').val(key[1].ctrl_index_left);
                 $('select[name="ctrl_index_right"]').val(key[1].ctrl_index_right);
 
-                console.log(key[1].c_usr_an_id + ' ~ u')
+                setHandleFieldChange(prevState => {
+                    return{
+                        ...prevState,
+                        c_usr_an_id: check_c_usr_ANID,
+                        ctrl_an_id:  key[1].ctrl_an_id,
+                        ctrl_arrow_up : key[1].ctrl_arrow_up,
+                        ctrl_arrow_down : key[1].ctrl_arrow_down,
+                        ctrl_arrow_left : key[1].ctrl_arrow_left,
+                        ctrl_arrow_right : key[1].ctrl_arrow_right,
+                        ctrl_btn_a : key[1].ctrl_btn_a,
+                        ctrl_btn_b : key[1].ctrl_btn_b,
+                        ctrl_btn_x : key[1].ctrl_btn_x,
+                        ctrl_btn_y : key[1].ctrl_btn_y,
+                        ctrl_btn_select : key[1].ctrl_btn_select,
+                        ctrl_btn_start : key[1].ctrl_btn_start,
+                        ctrl_index_left : key[1].ctrl_index_left,
+                        ctrl_index_right : key[1].ctrl_index_right
+                    }
+                })
+                //console.log(key[1].c_usr_an_id + ' ~ u')
             }
         })
         
-        if(createdOrUpdate == 'create'){
-            setHandleFieldChange({
-                ...ctrl_fields, [event.target.name]: event.target.value
-            })
-    
-            setAppVars(newState => {
+        //Update vars based on what request they make
+        if(createdOrUpdate === 'create'){
+            
+            setAppVars(prevState => {
                 return { 
-                    setOrNotSet: newState = "Set! [CREATE MODE]",
-                    red_or_Green_Txt : newState = "text-green-700 font-bold text-lg",
-                    default_option: newState = <option value="0"  >-- Pick Control --</option>
+                    ...prevState,
+                    setOrNotSet: prevState = "Set! [CREATE MODE]",
+                    red_or_Green_Txt : prevState = "text-green-700 font-bold text-lg"
                 }
             })
 
-        }else if(createdOrUpdate == 'update'){
-            setHandleFieldChange({
-                ...ctrl_fields, [event.target.name]: event.target.value
-            })
+        }else if(createdOrUpdate === 'update'){
     
-            setAppVars(newState => {
+            setAppVars(prevState => {
                 return { 
-                    setOrNotSet: newState = "Set! [UPDATE MODE]",
-                    red_or_Green_Txt : newState = "text-green-700 font-bold text-lg",
-                    default_option: newState = <option value="0"  >-- Pick Control --</option>
+                    ...prevState,
+                    setOrNotSet: prevState = "Set! [UPDATE MODE]",
+                    red_or_Green_Txt : prevState = "text-green-700 font-bold text-lg"
                 }
             })
-            /* 
-                ctrl_an_id = d3b7735896, 
-                c_usr_an_id = QWERT125, 
-                up = ABC12345, 
-                down = ABC12346, 
-                left = ABC12347, 
-                right = ABC12348
-            */
         }
+
+        localStorage.setItem("createOrUpdate_State", createdOrUpdate);
     }
 
     async function handleC_Usr_Set() {
         console.log(ctrl_fields)
         
     }
+
+    async function resetSelectToDefault(){
+        $('select[name="ctrl_arrow_up"]').val('0');
+        $('select[name="ctrl_arrow_down"]').val('0');
+        $('select[name="ctrl_arrow_left"]').val('0');
+        $('select[name="ctrl_arrow_right"]').val('0');
+        $('select[name="ctrl_btn_a"]').val('0');
+        $('select[name="ctrl_btn_b"]').val('0');
+        $('select[name="ctrl_btn_x"]').val('0');
+        $('select[name="ctrl_btn_y"]').val('0');
+        $('select[name="ctrl_btn_select"]').val('0');
+        $('select[name="ctrl_btn_start"]').val('0');
+        $('select[name="ctrl_index_left"]').val('0');
+        $('select[name="ctrl_index_right"]').val('0');
+
+
+    }
+
+    async function resetSelectToDefaultObject(){
+        setHandleFieldChange({
+                ctrl_an_id : "0",
+                c_usr_an_id : "0",
+                ctrl_arrow_up : "0",
+                ctrl_arrow_down : "0",
+                ctrl_arrow_left : "0",
+                ctrl_arrow_right : "0",
+                ctrl_index_left : "0",
+                ctrl_index_right : "0",
+                ctrl_btn_y : "0",
+                ctrl_btn_x : "0",
+                ctrl_btn_b : "0",
+                ctrl_btn_a : "0",
+                ctrl_btn_start : "0",
+                ctrl_btn_select : "0",
+                ctrl_combo_1 : "0",
+                ctrl_combo_2 : "0",
+                ctrl_combo_3 : "0",
+                ctrl_combo_4 : "0",
+                ctrl_combo_5 : "0",
+                ctrl_combo_6 : "0"
+        })
+    }
+    
    
     return(
         <div className="flex flex-col space-y-8 w-1/2 m-auto">
