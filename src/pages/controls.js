@@ -1,43 +1,49 @@
 import React, {useState, useEffect} from 'react'
+import $ from 'jquery';
 import {postArcData, 
-    btnStyle, 
-    anID_C_Gen, 
-    arc_ctrl_table__POST,
-    arc_c_usrs__GET,
-    arc_cmd_list_table__GET} from '../utils/sh'
+        patchArcData,
+        btnStyle, 
+        anID_C_Gen, 
+        arc_ctrl_table__POST,
+        arc_c_usrs__GET,
+        arc_cmd_list_table__GET,
+        arc_c_usrs__AN_GET,
+        arc_ctrl_table__GET
+} from '../utils/sh'
 
 function ControlsComponent(){
     
+    let createdOrUpdate = 'create'
 
     const [appVars, setAppVars] = useState({
         setOrNotSet : "Not Set",
         red_or_Green_Txt : "text-red-700 font-bold text-lg",
-        default_option: '<option value="0"  > -- Pick Control -- </option>'
+        default_option: <option value="0"  >-- Pick Control --</option>
     });
 
     const [c_usr_data, setC_Usr_Data] = useState(null)
     const [c_cmd_lst_data, setC_Cmd_List] = useState(null)
     const [ctrl_fields, setHandleFieldChange] = useState({
-        ctrl_an_id : "",
-        c_usr_an_id : "",
-        ctrl_arrow_up : "",
-        ctrl_arrow_down : "",
-        ctrl_arrow_left : "",
-        ctrl_arrow_right : "",
-        ctrl_index_left : "",
-        ctrl_index_right : "",
-        ctrl_btn_y : "",
-        ctrl_btn_x : "",
-        ctrl_btn_b : "",
-        ctrl_btn_a : "",
-        ctrl_btn_start : "",
-        ctrl_btn_select : "",
-        ctrl_combo_1 : "",
-        ctrl_combo_2 : "",
-        ctrl_combo_3 : "",
-        ctrl_combo_4 : "",
-        ctrl_combo_5 : "",
-        ctrl_combo_6 : ""
+        ctrl_an_id : "0",
+        c_usr_an_id : "0",
+        ctrl_arrow_up : "0",
+        ctrl_arrow_down : "0",
+        ctrl_arrow_left : "0",
+        ctrl_arrow_right : "0",
+        ctrl_index_left : "0",
+        ctrl_index_right : "0",
+        ctrl_btn_y : "0",
+        ctrl_btn_x : "0",
+        ctrl_btn_b : "0",
+        ctrl_btn_a : "0",
+        ctrl_btn_start : "0",
+        ctrl_btn_select : "0",
+        ctrl_combo_1 : "0",
+        ctrl_combo_2 : "0",
+        ctrl_combo_3 : "0",
+        ctrl_combo_4 : "0",
+        ctrl_combo_5 : "0",
+        ctrl_combo_6 : "0"
     });
 
     useEffect(async() =>{
@@ -66,12 +72,22 @@ function ControlsComponent(){
 
     async function handleSubmit(event) {
         event.preventDefault();
-        setHandleFieldChange({
-            ...ctrl_fields, [event.target.name]: event.target.value
-        })
 
-        postArcData(arc_ctrl_table__POST, ctrl_fields)
-        console.log(ctrl_fields)
+        if(createdOrUpdate == 'create'){
+            setHandleFieldChange({
+                ...ctrl_fields, [event.target.name]: event.target.value
+            })
+    
+            postArcData(arc_ctrl_table__POST, ctrl_fields)
+            
+        }else if(createdOrUpdate == 'update'){
+            setHandleFieldChange({
+                ...ctrl_fields, [event.target.name]: event.target.value
+            })
+    
+            //patchArcData(arc_ctrl_table__POST, ctrl_fields)
+            console.log(ctrl_fields)
+        }
     }
 
     async function handleFieldChange(event) {
@@ -86,26 +102,91 @@ function ControlsComponent(){
     
     }
 
-    async function handleFieldChange_usr(event) {
-        setHandleFieldChange({
-            ...ctrl_fields, [event.target.name]: event.target.value
-        })
+    async function resetSelectToDefault(){
+        $('select[name="ctrl_arrow_up"]').val('0');
+        $('select[name="ctrl_arrow_down"]').val('0');
+        $('select[name="ctrl_arrow_left"]').val('0');
+        $('select[name="ctrl_arrow_right"]').val('0');
+        $('select[name="ctrl_btn_a"]').val('0');
+        $('select[name="ctrl_btn_b"]').val('0');
+        $('select[name="ctrl_btn_x"]').val('0');
+        $('select[name="ctrl_btn_y"]').val('0');
+        $('select[name="ctrl_btn_select"]').val('0');
+        $('select[name="ctrl_btn_start"]').val('0');
+        $('select[name="ctrl_index_left"]').val('0');
+        $('select[name="ctrl_index_right"]').val('0');
+    }
 
-        setAppVars(newState => {
-            return { 
-                setOrNotSet: newState = "Set!",
-                red_or_Green_Txt : newState = "text-green-700 font-bold text-lg" 
+    async function handleFieldChange_usr(event) {
+
+        createdOrUpdate = 'create'
+        resetSelectToDefault()
+
+
+        const check_c_usr_ANID = event.target.value
+        const check_ctrl_ANID_raw = await fetch(arc_ctrl_table__GET) 
+        const check_ctrl_ANID_json = await check_ctrl_ANID_raw.json()
+        const check_ctrl_ANID_loop = Object.entries(check_ctrl_ANID_json).map(key => {
+            if(key[1].c_usr_an_id == check_c_usr_ANID){
+                createdOrUpdate = 'update'
+
+                $('select[name="ctrl_arrow_up"]').val(key[1].ctrl_arrow_up);
+                $('select[name="ctrl_arrow_down"]').val(key[1].ctrl_arrow_down);
+                $('select[name="ctrl_arrow_left"]').val(key[1].ctrl_arrow_left);
+                $('select[name="ctrl_arrow_right"]').val(key[1].ctrl_arrow_right);
+                $('select[name="ctrl_btn_a"]').val(key[1].ctrl_btn_a);
+                $('select[name="ctrl_btn_b"]').val(key[1].ctrl_btn_b);
+                $('select[name="ctrl_btn_x"]').val(key[1].ctrl_btn_x);
+                $('select[name="ctrl_btn_y"]').val(key[1].ctrl_btn_y);
+                $('select[name="ctrl_btn_select"]').val(key[1].ctrl_btn_select);
+                $('select[name="ctrl_btn_start"]').val(key[1].ctrl_btn_start);
+                $('select[name="ctrl_index_left"]').val(key[1].ctrl_index_left);
+                $('select[name="ctrl_index_right"]').val(key[1].ctrl_index_right);
+
+                console.log(key[1].c_usr_an_id + ' ~ u')
             }
         })
-
         
+        if(createdOrUpdate == 'create'){
+            setHandleFieldChange({
+                ...ctrl_fields, [event.target.name]: event.target.value
+            })
+    
+            setAppVars(newState => {
+                return { 
+                    setOrNotSet: newState = "Set! [CREATE MODE]",
+                    red_or_Green_Txt : newState = "text-green-700 font-bold text-lg",
+                    default_option: newState = <option value="0"  >-- Pick Control --</option>
+                }
+            })
+
+        }else if(createdOrUpdate == 'update'){
+            setHandleFieldChange({
+                ...ctrl_fields, [event.target.name]: event.target.value
+            })
+    
+            setAppVars(newState => {
+                return { 
+                    setOrNotSet: newState = "Set! [UPDATE MODE]",
+                    red_or_Green_Txt : newState = "text-green-700 font-bold text-lg",
+                    default_option: newState = <option value="0"  >-- Pick Control --</option>
+                }
+            })
+            /* 
+                ctrl_an_id = d3b7735896, 
+                c_usr_an_id = QWERT125, 
+                up = ABC12345, 
+                down = ABC12346, 
+                left = ABC12347, 
+                right = ABC12348
+            */
+        }
     }
 
     async function handleC_Usr_Set() {
         console.log(ctrl_fields)
         
     }
-    
    
     return(
         <div className="flex flex-col space-y-8 w-1/2 m-auto">
@@ -144,7 +225,7 @@ function ControlsComponent(){
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Arrow Down: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_down">
-                                {appVars.default_option, c_cmd_lst_data}
+                                {appVars.default_option} {c_cmd_lst_data}
                              </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
@@ -156,7 +237,7 @@ function ControlsComponent(){
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
                         <label htmlFor=""><b>Arrow Right: </b></label>
                             <select className="p-2 rounded " onChange={handleFieldChange} name="ctrl_arrow_right">
-                                {appVars.default_option} {c_cmd_lst_data} 
+                                {appVars.default_option} {c_cmd_lst_data}
                             </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center flex flex-col text-left">
