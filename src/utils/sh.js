@@ -72,7 +72,7 @@ export async function postArcData(apiLink, data){
 export async function patchArcData(apiLink, data, id){
     try{
         axios
-            .put(apiLink+'/'+id, data)
+            .patch(apiLink+id, data)
             .then(response => {
                 console.log(response)
             })

@@ -8,7 +8,8 @@ import {postArcData,
         arc_c_usrs__GET,
         arc_cmd_list_table__GET,
         arc_c_usrs__AN_GET,
-        arc_ctrl_table__GET
+        arc_ctrl_table__GET,
+        arc_ctrl_table__PATCH
 } from '../utils/sh'
 
 function ControlsComponent(){
@@ -22,6 +23,7 @@ function ControlsComponent(){
         default_option: <option value="0"  >-- Pick Control --</option>
     });
     const [ctrl_fields, setHandleFieldChange] = useState({
+        ctrl_id : "0",
         ctrl_an_id : "0",
         c_usr_an_id : "0",
         ctrl_arrow_up : "0",
@@ -74,35 +76,38 @@ function ControlsComponent(){
         const cus = localStorage.getItem('createOrUpdate_State')
         
         if(cus === 'create'){
-            setHandleFieldChange({
-                ...ctrl_fields, [event.target.name]: event.target.value
-            })
     
             postArcData(arc_ctrl_table__POST, ctrl_fields)
             alert("Your controls have been created!")
             
         }else if(cus === 'update'){
-            setHandleFieldChange({
-                ...ctrl_fields, [event.target.name]: event.target.value
-            })
-    
             //since we can only update by id, we need to get the id
-            //patchArcData(arc_ctrl_table__POST, ctrl_fields, ctrl_fields.ctrl_an_id)
+            patchArcData(arc_ctrl_table__PATCH, ctrl_fields, ctrl_fields.ctrl_id)
             alert("Your controls have been updated!")
         }
     }
 
     async function handleFieldChange(event) {
 
-        const getCtrl_AN_ID = await anID_C_Gen()
-        setHandleFieldChange(prevState => {
-            return{
-                ...prevState, 
-                [event.target.name]: event.target.value,
-                ctrl_an_id: getCtrl_AN_ID
-            }
-        })
+        const cus = localStorage.getItem('createOrUpdate_State')
         
+        if(cus === 'create'){
+            const getCtrl_AN_ID = await anID_C_Gen()
+            setHandleFieldChange(prevState => {
+                return{
+                    ...prevState, 
+                    ctrl_an_id: getCtrl_AN_ID,
+                    [event.target.name]: event.target.value
+                }
+            })
+        }else if(cus === 'update'){
+            setHandleFieldChange(prevState => {
+                return{
+                    ...prevState, 
+                    [event.target.name]: event.target.value
+                }
+            })
+        }
         
     }
 
@@ -114,6 +119,7 @@ function ControlsComponent(){
         resetSelectToDefaultObject()
 
         //chekc if this person needs an update
+        let getCtrlID = ''
         const check_c_usr_ANID = event.target.value
         const check_ctrl_ANID_raw = await fetch(arc_ctrl_table__GET) 
         const check_ctrl_ANID_json = await check_ctrl_ANID_raw.json()
@@ -137,6 +143,7 @@ function ControlsComponent(){
                 setHandleFieldChange(prevState => {
                     return{
                         ...prevState,
+                        ctrl_id:  key[1].ctrl_id,
                         c_usr_an_id: check_c_usr_ANID,
                         ctrl_an_id:  key[1].ctrl_an_id,
                         ctrl_arrow_up : key[1].ctrl_arrow_up,
@@ -159,6 +166,13 @@ function ControlsComponent(){
         
         //Update vars based on what request they make
         if(createdOrUpdate === 'create'){
+
+            setHandleFieldChange(prevState => {
+                return{
+                    ...prevState, 
+                    c_usr_an_id: check_c_usr_ANID
+                }
+            })
             
             setAppVars(prevState => {
                 return { 
