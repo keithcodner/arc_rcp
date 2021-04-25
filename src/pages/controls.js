@@ -7,7 +7,6 @@ import {postArcData,
         arc_ctrl_table__POST,
         arc_c_usrs__GET,
         arc_cmd_list_table__GET,
-        arc_c_usrs__AN_GET,
         arc_ctrl_table__GET,
         arc_ctrl_table__PATCH
 } from '../utils/sh'
@@ -260,9 +259,9 @@ function ControlsComponent(){
                              </select>
                         </div>
                         <div className="w-1/4 h-20 flex items-center">
-                            <button onClick={handleC_Usr_Set} className={btnStyle}>
+                            {/* <button onClick={handleC_Usr_Set} className={btnStyle}>
                                 test
-                            </button> 
+                            </button>  */}
                         </div>
                         <div className="w-1/4 h-20 flex items-center">
                             <span className={appVars.red_or_Green_Txt}>{appVars.setOrNotSet}</span>
