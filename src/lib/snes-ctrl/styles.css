@@ -17,7 +17,7 @@ body {
 .container {
   -webkit-animation: slideDown 1s ease-in;
           animation: slideDown 1s ease-in;
-  height: 100%;
+  height: 0%;
   left: 0;
   margin: 0 auto;
   position: absolute;

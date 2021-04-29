@@ -7,6 +7,7 @@ import {postArcData,
         anID_C_Gen, 
         arc_ctrl_table__POST,
         arc_c_usrs__GET,
+        arc_r_usrs__GET,
         arc_cmd_list_table__GET,
         arc_ctrl_table__GET,
         arc_ctrl_table__PATCH
@@ -20,10 +21,19 @@ function Cockpit(){
         "Startng Up Console...."
     ]);
     const [c_usr_data, setC_Usr_Data] = useState(null)
-    const [c_cmd_lst_data, setC_Cmd_List] = useState(null)
+    const [r_usr_data, setR_Usr_Data] = useState(null)
+    const [c_ctrl_data, setCtrl_Data] = useState(null)
+    
     const [appVars, setAppVars] = useState({
-        setOrNotSet : "Not Set",
-        red_or_Green_Txt : "text-red-700 font-bold text-lg",
+        setOrNotSet1 : "[Not Set]",
+        setOrNotSet2 : "[Not Set]",
+        red_or_Green_Txt1 : "text-red-700 font-bold text-lg",
+        red_or_Green_Txt2 : "text-red-700 font-bold text-lg",
+        isConnected: "false",
+        botConnectedID: "",
+        botConnectedName: "",
+        selectedCtrlID:"",
+        selectedCtrlName:"",
         default_option: <option value="0"  >-- Pick Control --</option>
     });
     const [ctrl_fields, setHandleFieldChange] = useState({
@@ -34,16 +44,29 @@ function Cockpit(){
 
     useEffect(async() =>{
         const response_arc_c_users = await fetch(arc_c_usrs__GET)
+        const response_arc_r_users = await fetch(arc_r_usrs__GET)
+        const response_arc_ctrl_table = await fetch(arc_ctrl_table__GET)
+
         const data_arc_c_users = await response_arc_c_users.json()
+        const data_arc_r_users = await response_arc_r_users.json()
+        const data_arc_ctrl_data = await response_arc_ctrl_table.json()
 
         const optionList_C_Usr = Object.entries(data_arc_c_users).map(key => {
             return(
-                <option value={key[1].c_usr_an_id}  >{key[1].c_usr_name}</option>
+                <option text={key[1].c_usr_name} value={key[1].c_usr_an_id}  >{key[1].c_usr_name}</option>
             )
         })
 
+        const optionList_R_Usr = Object.entries(data_arc_r_users).map(key => {
+            return(
+                <option text={key[1].r_usr_code_name} value={key[1].r_usr_an_id}  >{key[1].r_usr_code_name}</option>
+            )
+        })
+
+
         setC_Usr_Data(optionList_C_Usr)
- 
+        setR_Usr_Data(optionList_R_Usr)
+
     }, [])
 
     async function handleSubmit(event) {
@@ -63,7 +86,7 @@ function Cockpit(){
         }
     }
 
-    async function clearControlConsole(key) {
+    async function handleC_Usr_Set(key) {
         
     }
 
@@ -109,6 +132,31 @@ function Cockpit(){
 
         console.log(event)
     }
+
+    async function handleBotSelect(event) {
+        setAppVars(prevState => {
+            return { 
+                ...prevState,
+                setOrNotSet1: prevState = "[Set!]",
+                botConnectedID: prevState = event.target.value,
+                botConnectedName: prevState = event.target.options[event.target.selectedIndex].text,
+                red_or_Green_Txt1: prevState = "text-green-700 font-bold text-lg"
+            }
+        })
+    }
+
+    async function handleControllerSelect(event) {
+        
+        setAppVars(prevState => {
+            return { 
+                ...prevState,
+                setOrNotSet2: prevState = "[Set!]",
+                botConnectedID: prevState = event.target.value,
+                botConnectedName: prevState = event.target.options[event.target.selectedIndex].text,
+                red_or_Green_Txt2: prevState = "text-green-700 font-bold text-lg"
+            }
+        })
+    }
     
     return(
         <div className="flex flex-col space-y-8 w-1/2 m-auto">
@@ -137,7 +185,7 @@ function Cockpit(){
                         <div className="middle-pad">
                         <div className="logo">
                             <h1 className="logo__header">Super Lonaris</h1>
-                            <h2 className="logo__byline">Entertainment System</h2>
+                            <h2 className="logo__byline">Automated Remote Control System</h2>
                         </div>
                         <div className="start-select">
                             <div className="start-select__button button--start" >
@@ -173,36 +221,54 @@ function Cockpit(){
                 </div>
                 <div>
                     <div className="border-4 border-blue-600">
+                        <h1 className="text-xl">Choose your robot and configuration:</h1>
                         <div className="flex flex-wrap">
 
-                                <div className="w-1/4 h-20 flex items-center">
-                                    <label htmlFor=""><b>Pick Robot:</b></label>
-                                </div>
-                                <div className="w-1/4 h-20 flex items-center">
-                                    <select className="p-2 rounded" name="c_usr_an_id" >
-                                    <option value="0"  >-- Pick User --</option>
-                                        
+                                <div className="w-1/3 h-20 flex items-center">
+                                    <label htmlFor=""><b>1. </b></label>
+                                    <select className="p-2 rounded" name="c_usr_an_id" onChange={handleBotSelect}>
+                                        <option value="0"  >-- Pick Your Bot --</option>
+                                        {r_usr_data}
                                     </select>
                                 </div>
-                                <div className="w-1/4 h-20 flex items-center">
-                                    <span >test</span>
+                                <div className="w-1/6 h-20 flex items-center">
+                                    <span className={appVars.red_or_Green_Txt1}>{appVars.setOrNotSet1}</span>
+                                </div>
+                                <div className="w-1/6 h-20 flex items-center">
+                                    <button onClick={handleC_Usr_Set} className={btnStyle}>
+                                        Connect
+                                    </button>
+                                </div>
+                                <div className="w-1/6 h-20 flex items-center">
+                                    <button onClick={handleC_Usr_Set} className={btnStyle}>
+                                        Get Status
+                                    </button>
+                                </div>
+                                <div className="w-1/6 h-20 flex items-center">
+                                    <button onClick={handleC_Usr_Set} className={btnStyle}>
+                                        test
+                                    </button>
                                 </div>
                         </div>
                         <div className="flex flex-wrap">
 
-                                <div className="w-1/4 h-20 flex items-center">
-                                    <label htmlFor=""><b>Pick Controls:</b></label>
-                                </div>
-                                <div className="w-1/4 h-20 flex items-center">
-                                    <select className="p-2 rounded" name="c_usr_an_id" >
-                                    <option value="0"  >-- Pick User --</option>
-                                        
+                                <div className="w-1/3 h-20 flex items-center">
+                                    <label htmlFor=""><b>2. </b></label> 
+                                    <select className="p-2 rounded" name="r_usr_an_id" onChange={handleControllerSelect}>
+                                        <option value="0"  >-- Pick Control --</option>
+                                         {c_usr_data}
                                     </select>
                                 </div>
-                                <div className="w-1/4 h-20 flex items-center">
-                                    <span ></span>
+                                <div className="w-1/3 h-20 flex items-center">
+                                    <span className={appVars.red_or_Green_Txt2}>{appVars.setOrNotSet2}</span>
                                 </div>
+                                
                         </div>
+                        <div className="flex flex-wrap">
+                                
+                                
+                        </div>
+                        
                     </div>
                 </div>
             </div>
