@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import $ from 'jquery';
 import '../../src/lib/snes-ctrl/styles.css'
 import {postArcData, 
@@ -9,17 +9,15 @@ import {postArcData,
         arc_c_usrs__GET,
         arc_r_usrs__GET,
         arc_cmd_list_table__GET,
+        arc_ctrl_table__AN_GET_By_C_User,
         arc_ctrl_table__GET,
         arc_ctrl_table__PATCH
 } from '../utils/sh'
 
 function Cockpit(){
     
+    const consoleOutput = useRef(null);
 
-    var createdOrUpdate = 'create'
-    const [consoleTextAreaValue, setConsoleTextAreaValue] = useState([
-        "Startng Up Console...."
-    ]);
     const [c_usr_data, setC_Usr_Data] = useState(null)
     const [r_usr_data, setR_Usr_Data] = useState(null)
     const [c_ctrl_data, setCtrl_Data] = useState(null)
@@ -36,11 +34,54 @@ function Cockpit(){
         selectedCtrlName:"",
         default_option: <option value="0"  >-- Pick Control --</option>
     });
+    const [controllerMap, setControllerMap] = useState({
+        ctrl_index_left : "",
+        ctrl_index_right : "",
+        ctrl_arrow_up : "",
+        ctrl_arrow_down : "",
+        ctrl_arrow_left: "",
+        ctrl_arrow_right: "",
+        ctrl_btn_x: "",
+        ctrl_btn_y:"",
+        ctrl_btn_a:"",
+        ctrl_btn_b: "",
+        ctrl_btn_start:"",
+        ctrl_btn_select:""
+    });
+
+    const [sendCommandData, setSendCommandData] = useState({
+        ctrl_an_id : "0",
+        c_usr_an_id : "0",
+        ctrl_arrow_up : "0",
+        ctrl_arrow_down : "0",
+        ctrl_arrow_left : "0",
+        ctrl_arrow_right : "0",
+        ctrl_index_left : "0",
+        ctrl_index_right : "0",
+        ctrl_btn_y : "0",
+        ctrl_btn_x : "0",
+        ctrl_btn_b : "0",
+        ctrl_btn_a : "0",
+        ctrl_btn_start : "0",
+        ctrl_btn_select : "0",
+        ctrl_combo_1 : "0",
+        ctrl_combo_2 : "0",
+        ctrl_combo_3 : "0",
+        ctrl_combo_4 : "0",
+        ctrl_combo_5 : "0",
+    })
+    
     const [ctrl_fields, setHandleFieldChange] = useState({
         ctrl_id : "0",
         ctrl_an_id : "0",
         c_usr_an_id : "0"
     });
+    const [currentConsoleOutput, setCurrentConsoleOutput] = useState([
+        ""
+    ]);
+    const [consoleTextAreaValue, setConsoleTextAreaValue] = useState([
+        "Startng Up Console...."
+    ]);
 
     useEffect(async() =>{
         const response_arc_c_users = await fetch(arc_c_usrs__GET)
@@ -86,48 +127,64 @@ function Cockpit(){
         }
     }
 
-    async function handleC_Usr_Set(key) {
+    async function sendTest(event) {
         
     }
 
-    async function execCtrlOperation(key) {
-        console.log(key)
+    async function sendConnectToken(event) {
+        
+    }
+
+    async function getRobotStatus(event) {
+        
+    }
+
+    async function execCtrlOperation(key, mappedCtrl) {
+        let keyInput = key + ' => ' + mappedCtrl
+
+        // Add commands to console screen
         setConsoleTextAreaValue(prevState => [
             ...prevState,
-            '\r\n' + key
+            '\n' + keyInput
         ])
+        setCurrentConsoleOutput([keyInput])
 
-        $('#mainConsole').scrollTop($('#mainConsole')[0].scrollHeight);
+        //Scroll down
+        var textarea = document.getElementById('mainConsole');
+        textarea.scrollTop = textarea.scrollHeight 
+
+        //Send Command
     }
 
     async function handleControllerClick(event) {
 
         const controllerID = event.target.attributes.data1.value
+        const mappedKey = controllerMap
         
         if(controllerID === 'ctrl_arrow_up'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_up)
         }else if(controllerID === 'ctrl_arrow_down'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_down)
         }else if(controllerID === 'ctrl_arrow_left'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_left)
         }else if(controllerID === 'ctrl_arrow_right'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_right)
         }else if(controllerID === 'ctrl_index_left'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_index_left)
         }else if(controllerID === 'ctrl_index_right'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_index_right)
         }else if(controllerID === 'ctrl_btn_y'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_y)
         }else if(controllerID === 'ctrl_btn_x'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_x)
         }else if(controllerID === 'ctrl_btn_b'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_b)
         }else if(controllerID === 'ctrl_btn_a'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_a)
         }else if(controllerID === 'ctrl_btn_start'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_start)
         }else if(controllerID === 'ctrl_btn_select'){
-            execCtrlOperation(controllerID)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_select)
         }
 
         console.log(event)
@@ -154,6 +211,27 @@ function Cockpit(){
                 botConnectedID: prevState = event.target.value,
                 botConnectedName: prevState = event.target.options[event.target.selectedIndex].text,
                 red_or_Green_Txt2: prevState = "text-green-700 font-bold text-lg"
+            }
+        })
+
+        const resp_selected_controller = await fetch(arc_ctrl_table__AN_GET_By_C_User+event.target.value)
+        const selected_data_controller = await resp_selected_controller.json()
+
+        setControllerMap(prevState => {
+            return { 
+                ...prevState,
+                ctrl_index_left: prevState = selected_data_controller.ctrl_index_left,
+                ctrl_index_right: prevState = selected_data_controller.ctrl_index_right,
+                ctrl_arrow_up: prevState = selected_data_controller.ctrl_arrow_up,
+                ctrl_arrow_down: prevState = selected_data_controller.ctrl_arrow_down,
+                ctrl_arrow_left: prevState = selected_data_controller.ctrl_arrow_left,
+                ctrl_arrow_right: prevState = selected_data_controller.ctrl_arrow_right,
+                ctrl_btn_x: prevState = selected_data_controller.ctrl_btn_x,
+                ctrl_btn_y: prevState = selected_data_controller.ctrl_btn_y,
+                ctrl_btn_a: prevState = selected_data_controller.ctrl_btn_a,
+                ctrl_btn_b: prevState = selected_data_controller.ctrl_btn_b,
+                ctrl_btn_start: prevState = selected_data_controller.ctrl_btn_start,
+                ctrl_btn_select: prevState = selected_data_controller.ctrl_btn_select
             }
         })
     }
@@ -217,7 +295,12 @@ function Cockpit(){
                     <br /><br /><br /><br /><br /><br /><br /><br /><br />
                     <br /><br /><br /><br /><br />
                     <h1 className="text-xl">Cockpit Console:</h1>
-                    <textarea id="mainConsole" value={consoleTextAreaValue} className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" rows="5" readOnly></textarea>
+                    <div id="mainConsole" className="overflow-auto h-32 bg-black rounded-lg text-white leading-6" style={{ whiteSpace: 'pre-wrap' }} ref={consoleOutput} abindex='1' readOnly>
+                        {consoleTextAreaValue}
+                    </div>
+                    <div id="currentCommand" className="overflow-auto h-6 bg-purple-900 rounded-lg text-yellow-200 leading-6"  ref={consoleOutput} abindex='1' readOnly>
+                        {currentConsoleOutput}
+                    </div>
                 </div>
                 <div>
                     <div className="border-4 border-blue-600">
@@ -235,17 +318,17 @@ function Cockpit(){
                                     <span className={appVars.red_or_Green_Txt1}>{appVars.setOrNotSet1}</span>
                                 </div>
                                 <div className="w-1/6 h-20 flex items-center">
-                                    <button onClick={handleC_Usr_Set} className={btnStyle}>
+                                    <button onClick={sendConnectToken} className={btnStyle}>
                                         Connect
                                     </button>
                                 </div>
                                 <div className="w-1/6 h-20 flex items-center">
-                                    <button onClick={handleC_Usr_Set} className={btnStyle}>
+                                    <button onClick={getRobotStatus} className={btnStyle}>
                                         Get Status
                                     </button>
                                 </div>
                                 <div className="w-1/6 h-20 flex items-center">
-                                    <button onClick={handleC_Usr_Set} className={btnStyle}>
+                                    <button onClick={sendTest} className={btnStyle}>
                                         test
                                     </button>
                                 </div>
@@ -274,7 +357,6 @@ function Cockpit(){
             </div>
         </div>
     )
-    
 }
 
 export default Cockpit

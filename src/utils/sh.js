@@ -37,7 +37,8 @@ export const arc_c_usrs__GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/ar
  arc_c_usrs__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_c_users/c_usr_an_id/',
  arc_r_usrs__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_r_users/r_usr_an_id/',
  arc_sys_settings__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_sys_settings/set_an_id/',
- arc_ctrl_table__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/ctrl_id/',
+ arc_ctrl_table__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/ctrl_an_id/',
+ arc_ctrl_table__AN_GET_By_C_User = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_ctrl_table/c_usr_an_id/',
  arc_cmd_table__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_table/cmd_id/',
  arc_cmd_list_table__AN_GET = 'http://'+api_domain+':'+api_port+'/api/arc_db/arc_cmd_list/cmd_lst_id/',
 
