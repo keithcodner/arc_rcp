@@ -48,7 +48,6 @@ function Cockpit(){
         ctrl_btn_start:"",
         ctrl_btn_select:""
     });
-
     const [sendCommandData, setSendCommandData] = useState({
         ctrl_an_id : "0",
         c_usr_an_id : "0",
@@ -69,12 +68,12 @@ function Cockpit(){
         ctrl_combo_3 : "0",
         ctrl_combo_4 : "0",
         ctrl_combo_5 : "0",
-    })
-    
-    const [ctrl_fields, setHandleFieldChange] = useState({
+    })   
+    const [idContainer, setIDContainer] = useState({
         ctrl_id : "0",
         ctrl_an_id : "0",
-        c_usr_an_id : "0"
+        c_usr_an_id : "0",
+        r_usr_an_id : "0"
     });
     const [currentConsoleOutput, setCurrentConsoleOutput] = useState([
         ""
@@ -111,20 +110,20 @@ function Cockpit(){
     }, [])
 
     async function handleSubmit(event) {
-        event.preventDefault();
+        // event.preventDefault();
         
-        const cus = localStorage.getItem('createOrUpdate_State')
+        // const cus = localStorage.getItem('createOrUpdate_State')
         
-        if(cus === 'create'){
+        // if(cus === 'create'){
     
-            postArcData(arc_ctrl_table__POST, ctrl_fields)
-            alert("Your controls have been created!")
+        //     postArcData(arc_ctrl_table__POST, ctrl_fields)
+        //     alert("Your controls have been created!")
             
-        }else if(cus === 'update'){
-            //since we can only update by id, we need to get the id
-            patchArcData(arc_ctrl_table__PATCH, ctrl_fields, ctrl_fields.ctrl_id)
-            alert("Your controls have been updated!")
-        }
+        // }else if(cus === 'update'){
+        //     //since we can only update by id, we need to get the id
+        //     patchArcData(arc_ctrl_table__PATCH, ctrl_fields, ctrl_fields.ctrl_id)
+        //     alert("Your controls have been updated!")
+        // }
     }
 
     async function sendTest(event) {
@@ -147,6 +146,8 @@ function Cockpit(){
             ...prevState,
             '\n' + keyInput
         ])
+
+        //update current console
         setCurrentConsoleOutput([keyInput])
 
         //Scroll down
@@ -191,15 +192,27 @@ function Cockpit(){
     }
 
     async function handleBotSelect(event) {
+
+        //update app vars
         setAppVars(prevState => {
             return { 
                 ...prevState,
-                setOrNotSet1: prevState = "[Set!]",
+                setOrNotSet1: prevState = "[Robot Set!]",
                 botConnectedID: prevState = event.target.value,
                 botConnectedName: prevState = event.target.options[event.target.selectedIndex].text,
                 red_or_Green_Txt1: prevState = "text-green-700 font-bold text-lg"
             }
         })
+        
+        //update ID container
+        setIDContainer(prevState => {
+            return{
+                ...prevState,
+                r_usr_an_id : prevState = event.target.value
+            }
+        })
+
+
     }
 
     async function handleControllerSelect(event) {
@@ -207,13 +220,14 @@ function Cockpit(){
         setAppVars(prevState => {
             return { 
                 ...prevState,
-                setOrNotSet2: prevState = "[Set!]",
+                setOrNotSet2: prevState = "[User Controls Set!]",
                 botConnectedID: prevState = event.target.value,
                 botConnectedName: prevState = event.target.options[event.target.selectedIndex].text,
                 red_or_Green_Txt2: prevState = "text-green-700 font-bold text-lg"
             }
         })
 
+        // API request to get controller data
         const resp_selected_controller = await fetch(arc_ctrl_table__AN_GET_By_C_User+event.target.value)
         const selected_data_controller = await resp_selected_controller.json()
 
@@ -234,6 +248,18 @@ function Cockpit(){
                 ctrl_btn_select: prevState = selected_data_controller.ctrl_btn_select
             }
         })
+
+        //update ID container
+        setIDContainer(prevState => {
+            return{
+                ...prevState,
+                c_usr_an_id: prevState = event.target.value,
+                ctrl_id : prevState = selected_data_controller.ctrl_id,
+                ctrl_an_id : prevState = selected_data_controller.ctrl_an_id,
+            }
+        })
+
+        console.log(idContainer)
     }
     
     return(
