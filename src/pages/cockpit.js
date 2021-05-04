@@ -1,17 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react'
 import $ from 'jquery';
 import '../../src/lib/snes-ctrl/styles.css'
-import {postArcData, 
-        patchArcData,
+import {
         btnStyle, 
-        anID_C_Gen, 
-        arc_ctrl_table__POST,
+        anID_Cmd_Gen,
+        getCurrDateTime,
         arc_c_usrs__GET,
         arc_r_usrs__GET,
-        arc_cmd_list_table__GET,
         arc_ctrl_table__AN_GET_By_C_User,
-        arc_ctrl_table__GET,
-        arc_ctrl_table__PATCH
+        arc_ctrl_table__GET
 } from '../utils/sh'
 
 function Cockpit(){
@@ -49,25 +46,19 @@ function Cockpit(){
         ctrl_btn_select:""
     });
     const [sendCommandData, setSendCommandData] = useState({
-        ctrl_an_id : "0",
+        cmd_an_id : "0",
+        r_usr_an_id : "0",
         c_usr_an_id : "0",
-        ctrl_arrow_up : "0",
-        ctrl_arrow_down : "0",
-        ctrl_arrow_left : "0",
-        ctrl_arrow_right : "0",
-        ctrl_index_left : "0",
-        ctrl_index_right : "0",
-        ctrl_btn_y : "0",
-        ctrl_btn_x : "0",
-        ctrl_btn_b : "0",
-        ctrl_btn_a : "0",
-        ctrl_btn_start : "0",
-        ctrl_btn_select : "0",
-        ctrl_combo_1 : "0",
-        ctrl_combo_2 : "0",
-        ctrl_combo_3 : "0",
-        ctrl_combo_4 : "0",
-        ctrl_combo_5 : "0",
+        r_usr_code_name : "0",
+        cmd_exec_name : "0",
+        cmd_exec_params : "0",
+        cmd_exec_data : "0",
+        cmd_status : "0",
+        cmd_op1 : "0",
+        cmd_op2 : "0",
+        cmd_op3 : "0",
+        cmd_date_created : "0",
+        cmd_date_executed : "0"
     })   
     const [idContainer, setIDContainer] = useState({
         ctrl_id : "0",
@@ -138,23 +129,60 @@ function Cockpit(){
         
     }
 
-    async function execCtrlOperation(key, mappedCtrl) {
-        let keyInput = key + ' => ' + mappedCtrl
-
+    async function updateConsoles(msg) {
         // Add commands to console screen
         setConsoleTextAreaValue(prevState => [
             ...prevState,
-            '\n' + keyInput
+            '\n' + msg
         ])
 
         //update current console
-        setCurrentConsoleOutput([keyInput])
+        setCurrentConsoleOutput([msg])
 
         //Scroll down
         var textarea = document.getElementById('mainConsole');
         textarea.scrollTop = textarea.scrollHeight 
+    }
 
-        //Send Command
+    async function execCtrlOperation(key, mappedCtrl, params="0", datas="0", op1="0", op2="0", op3="0") {
+        let keyInput = key + ' => ' + mappedCtrl
+
+        if(idContainer.ctrl_id === "0" || idContainer.ctrl_an_id === "0" || idContainer.c_usr_an_id === "0" || idContainer.r_usr_an_id === "0"){
+
+            //Error message for id validation check
+            let ctrlAndRobotNotSetError = "ERROR: Your robot or controls aren't set yet. Set those first and connect to your robot before issuing a command."
+            alert('Command was not sent to Robot!')
+
+            //Update cosnole
+            updateConsoles(ctrlAndRobotNotSetError)
+            
+        }else{
+
+            //Update cosnole
+            updateConsoles(keyInput)
+
+            //Assign Command
+            setSendCommandData(prevState => {
+                return{
+                    ...prevState,
+                    cmd_an_id : prevState = anID_Cmd_Gen(),
+                    r_usr_an_id : prevState = idContainer.r_usr_an_id,
+                    c_usr_an_id : prevState = idContainer.c_usr_an_id,
+                    r_usr_code_name : prevState = appVars.botConnectedName,
+                    cmd_exec_name : prevState = mappedCtrl,
+                    cmd_exec_params : prevState = params,
+                    cmd_exec_data : prevState = datas,
+                    cmd_status : prevState = "UNEXECUTED",
+                    cmd_op1 : prevState = op1,
+                    cmd_op2 : prevState = op2,
+                    cmd_op3 : prevState = op3,
+                    cmd_date_created : prevState = getCurrDateTime(),
+                    cmd_date_executed : prevState = "0000-00-00 00:00:00"
+                }
+            })
+
+            console.log(sendCommandData)
+        }
     }
 
     async function handleControllerClick(event) {
@@ -163,35 +191,38 @@ function Cockpit(){
         const mappedKey = controllerMap
         
         if(controllerID === 'ctrl_arrow_up'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_up)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_up, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_arrow_down'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_down)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_down, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_arrow_left'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_left)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_left, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_arrow_right'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_right)
+            execCtrlOperation(controllerID, mappedKey.ctrl_arrow_right, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_index_left'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_index_left)
+            execCtrlOperation(controllerID, mappedKey.ctrl_index_left, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_index_right'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_index_right)
+            execCtrlOperation(controllerID, mappedKey.ctrl_index_right, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_btn_y'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_btn_y)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_y, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_btn_x'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_btn_x)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_x, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_btn_b'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_btn_b)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_b, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_btn_a'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_btn_a)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_a, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_btn_start'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_btn_start)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_star, "0", "0", "0", "0", "0")
         }else if(controllerID === 'ctrl_btn_select'){
-            execCtrlOperation(controllerID, mappedKey.ctrl_btn_select)
+            execCtrlOperation(controllerID, mappedKey.ctrl_btn_select, "0", "0", "0", "0", "0")
         }
 
         console.log(event)
     }
 
     async function handleBotSelect(event) {
+
+        //Console Message
+        let robotSelectMessage = "CONSOLE: Your Robot ["+event.target.options[event.target.selectedIndex].text+"] has been selected. "
 
         //update app vars
         setAppVars(prevState => {
@@ -212,10 +243,14 @@ function Cockpit(){
             }
         })
 
-
+        //Update cosnole
+        updateConsoles(robotSelectMessage)
     }
 
     async function handleControllerSelect(event) {
+
+        //Console Message
+        let controlSelectMessage = "CONSOLE: Your User Controls for ["+event.target.options[event.target.selectedIndex].text+"] have been loaded."
         
         setAppVars(prevState => {
             return { 
@@ -258,6 +293,9 @@ function Cockpit(){
                 ctrl_an_id : prevState = selected_data_controller.ctrl_an_id,
             }
         })
+
+        //Update cosnole
+        updateConsoles(controlSelectMessage)
 
         console.log(idContainer)
     }

@@ -166,7 +166,7 @@ export const anID_C_Gen = async(apiLink=arc_c_usrs__AN_GET) => {
     return  genID
 }
 
-export const anID_Cmd_Lst_Gen = async(apiLink=arc_r_usrs__GET) => {
+export const anID_Cmd_Lst_Gen = async(apiLink=arc_cmd_list_table__AN_GET) => {
    
     let genID =  ''
     let response = ''
@@ -183,6 +183,22 @@ export const anID_Cmd_Lst_Gen = async(apiLink=arc_r_usrs__GET) => {
     return  genID
 }
 
+export const anID_Cmd_Gen = async(apiLink=arc_cmd_table__AN_GET) => {
+   
+    let genID =  ''
+    let response = ''
+
+    genID = createANID(10)
+    response = axios.get(apiLink + genID)
+    if(response.status === '200'){
+        genID = createANID(10)
+        return  genID
+    }else if(response.status === '404'){
+        return  genID
+    }
+
+    return  genID
+}
 
 //------------------NON - ASYNC FUNCTIONS-----------------------------
 
