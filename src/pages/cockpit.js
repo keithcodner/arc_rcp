@@ -5,10 +5,13 @@ import {
         btnStyle, 
         anID_Cmd_Gen,
         getCurrDateTime,
+        postArcData,
+        createANID,
         arc_c_usrs__GET,
         arc_r_usrs__GET,
         arc_ctrl_table__AN_GET_By_C_User,
-        arc_ctrl_table__GET
+        arc_ctrl_table__GET,
+        arc_cmd_table__POST
 } from '../utils/sh'
 
 function Cockpit(){
@@ -165,7 +168,7 @@ function Cockpit(){
             setSendCommandData(prevState => {
                 return{
                     ...prevState,
-                    cmd_an_id : prevState = anID_Cmd_Gen(),
+                    cmd_an_id : prevState = createANID(40),
                     r_usr_an_id : prevState = idContainer.r_usr_an_id,
                     c_usr_an_id : prevState = idContainer.c_usr_an_id,
                     r_usr_code_name : prevState = appVars.botConnectedName,
@@ -180,6 +183,8 @@ function Cockpit(){
                     cmd_date_executed : prevState = "0000-00-00 00:00:00"
                 }
             })
+
+            postArcData(arc_cmd_table__POST, sendCommandData)
 
             console.log(sendCommandData)
         }
@@ -256,8 +261,8 @@ function Cockpit(){
             return { 
                 ...prevState,
                 setOrNotSet2: prevState = "[User Controls Set!]",
-                botConnectedID: prevState = event.target.value,
-                botConnectedName: prevState = event.target.options[event.target.selectedIndex].text,
+                selectedCtrlID: prevState = event.target.value,
+                selectedCtrlName: prevState = event.target.options[event.target.selectedIndex].text,
                 red_or_Green_Txt2: prevState = "text-green-700 font-bold text-lg"
             }
         })
