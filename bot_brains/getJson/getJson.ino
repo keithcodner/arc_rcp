@@ -47,6 +47,30 @@ void setup() {
 
 }
 
+void executeCommands(String id, String cmd){
+
+  // Assign required variables
+  const String newCmdStatus = "EXECUTED";
+
+  //Execute Given Commands
+  if(cmd == "MOVE_UP"){
+    
+  }else if(cmd == "MOVE_DOWN"){
+  }else if(cmd == "MOVE_LEFT"){
+  }else if(cmd == "MOVE_RIGHT"){
+  }else if(cmd == "VIBRATE_DEFAULT"){
+  }else if(cmd == "BLINK_0"){
+  }else if(cmd == "WAIT_0"){
+  }else if(cmd == "JUMP_0"){
+  }else if(cmd == "SCAN_0"){
+  }else if(cmd == "SIGNAL_0"){
+    
+  }
+
+  //Update Status of given commands
+  //<patch commands go here>
+}
+
 void loop() {
   if(WiFi.status() == WL_CONNECTED){
     long rnd = random(1, 10);
@@ -69,13 +93,24 @@ void loop() {
       payload.remove(0,1);
       payload.toCharArray(json, 500);
 
-      StaticJsonDocument<200> doc;
-      deserializeJson(doc, json);
+      StaticJsonDocument<300> doc;
+      DeserializationError err = deserializeJson(doc, json);
+      JsonArray& doc_1 = doc.as<JsonArray>();
 
-      int id = doc["id"];
-      const char* email = doc["email"];
+      if(err){
+        Serial.println("ERROR: ");
+        Serial.println(err.c_str());
+        return;
+      }
+      
+      int cmd_id = doc["cmd_id"];
+      const char* cmd_an_id = doc["cmd_an_id"];
 
-      Serial.println(String(id) + " - " + String(email) + "\n");
+      
+
+      Serial.println(String(cmd_id) + " - " + String(cmd_an_id) + "\n");
+      //Serial.println(String(doc));
+      
       client.end();
       
       
@@ -104,3 +139,4 @@ void loop() {
   delay(10000);
 
 }
+
