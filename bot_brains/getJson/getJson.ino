@@ -38,7 +38,8 @@ void setup() {
   Heltec.display -> drawString(3, 3*9, "\nConnected to: " + String(ssid));
   
   Serial.print("IP Address: ");
-  Heltec.display -> drawString(4, 4*9, "IP Address: " + String(WiFi.localIP()));
+  String LocalIP = String() + WiFi.localIP()[0] + "." + WiFi.localIP()[1] + "." + WiFi.localIP()[2] + "." + WiFi.localIP()[3];
+  Heltec.display -> drawString(4, 4*9, "IP Address: " + LocalIP);
   
   Serial.println(WiFi.localIP());
   
