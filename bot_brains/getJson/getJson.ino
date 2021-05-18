@@ -13,7 +13,7 @@ void setup() {
 
   //Setup Heltec display
   pinMode(LED,OUTPUT);
-  digitalWrite(LED,HIGH);
+  
   Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Enable*/, true /*Serial Enable*/);
   delay(300);
 
@@ -48,24 +48,35 @@ void setup() {
 
 }
 
+void blinkFlash(int delayedTime){
+  digitalWrite(LED,HIGH);
+  delay(delayedTime);                       
+  digitalWrite(LED,LOW);
+  delay(delayedTime);
+}
+
 void executeCommands(String id, String cmd){
 
   // Assign required variables
   const String newCmdStatus = "EXECUTED";
 
   //Execute Given Commands
-  if(cmd == "MOVE_UP"){
+  if(cmd == "ABC12345"){
     
-  }else if(cmd == "MOVE_DOWN"){
-  }else if(cmd == "MOVE_LEFT"){
-  }else if(cmd == "MOVE_RIGHT"){
-  }else if(cmd == "VIBRATE_DEFAULT"){
-  }else if(cmd == "BLINK_0"){
-  }else if(cmd == "WAIT_0"){
-  }else if(cmd == "JUMP_0"){
-  }else if(cmd == "SCAN_0"){
-  }else if(cmd == "SIGNAL_0"){
-  }else if(cmd == "GRAB_0"){
+  }else if(cmd == "ABC12346"){
+    blinkFlash(500);  
+  }else if(cmd == "ABC12347"){
+  }else if(cmd == "ABC12348"){
+    blinkFlash(1000);  
+  }else if(cmd == "ABC12349"){
+  }else if(cmd == "ABC12350"){
+    blinkFlash(500);                      
+  }else if(cmd == "ABC12351"){
+  }else if(cmd == "ABC12352"){
+  }else if(cmd == "ABC12353"){
+  }else if(cmd == "ABC12354"){
+  }else if(cmd == "fd35bd0bea"){
+  }else if(cmd == "0"){
     
   }
 
@@ -97,8 +108,12 @@ void loop() {
       for (JsonObject elem : doc.as<JsonArray>()) {
         
         const char* cmd_an_id = elem["cmd_an_id"]; 
+        const char* cmd_exec_name = elem["cmd_exec_name"]; 
+
+        executeCommands("Test_ID", String(cmd_exec_name));
        
         Serial.println(String(cmd_an_id) + "\n");
+        delay(90);   
       }
       
       client.end();
