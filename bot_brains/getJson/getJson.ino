@@ -4,7 +4,11 @@
 #include <HTTPClient.h>;
 #include <ArduinoJson.h>;
 
-#define pin_36z 36
+//---------- PIN VARS ---------------
+#define pin_13 13
+#define pin_12 12
+#define pin_14 14
+#define pin_27 27
 
 //--------------------------- GLOBAL VARS -----------------------------
 
@@ -13,13 +17,8 @@ const char* ssid = "TP-Link_A36A";
 const char* password = "codner1234";
 
 
-//---------- PIN VARS ---------------
-const int pin_36 = 36;
-const int pin_37 = 37;
-const int pin_38 = 38;
-const int pin_39 = 39;
 
-const int pin_13 = 13;
+
 
 //--------------------------- BOARD SETUP -----------------------------
 void setup() {
@@ -27,16 +26,10 @@ void setup() {
   //Setup Heltec display
   pinMode(LED, OUTPUT);
 
-  pinMode(pin_36, OUTPUT);
-  pinMode(pin_37, OUTPUT);
-  pinMode(pin_38, OUTPUT);
-  pinMode(pin_39, OUTPUT);
-
-  pinMode(13, OUTPUT);
-
-  digitalWrite(13, HIGH);
-  delay(500);                       
-  digitalWrite(13, LOW);
+  pinMode(pin_13, OUTPUT);
+  pinMode(pin_12, OUTPUT);
+  pinMode(pin_14, OUTPUT);
+  pinMode(pin_27, OUTPUT);
   
   Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Enable*/, true /*Serial Enable*/);
   delay(300);
@@ -89,13 +82,13 @@ void executeCommands(String id, String cmd){
 
   //Execute Given Commands
   if(cmd == "ABC12345"){ // MOVE_UP
-    blinkFlash(pin_36, 500);
+    blinkFlash(pin_13, 500);
   }else if(cmd == "ABC12346"){ // MOVE_DOWN
-    blinkFlash(pin_37, 500); 
+    blinkFlash(pin_12, 500); 
   }else if(cmd == "ABC12347"){ // MOVE_LEFT
-    blinkFlash(pin_38, 500);
+    blinkFlash(pin_14, 500);
   }else if(cmd == "ABC12348"){ // MOVE_RIGHT
-    blinkFlash(pin_39, 500);
+    blinkFlash(pin_27, 500);
   }else if(cmd == "ABC12349"){ // VIBRATE_DEFAULT
   }else if(cmd == "ABC12350"){ // BLINK_0            
   }else if(cmd == "ABC12351"){ // JUMP_0
@@ -150,10 +143,6 @@ void loop() {
         delay(90);   
         Serial.println("WIFI Status: " + String(WiFi.status()));
         Serial.println("HTTP CODE: " +String(httpCode) + "\n");
-
-        digitalWrite(13, HIGH);
-        delay(500);                       
-        digitalWrite(13, LOW);
       }
       
       client.end();
