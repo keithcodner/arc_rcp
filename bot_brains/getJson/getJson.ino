@@ -4,15 +4,39 @@
 #include <HTTPClient.h>;
 #include <ArduinoJson.h>;
 
+#define pin_36z 36
 
+//--------------------------- GLOBAL VARS -----------------------------
+
+//---------- WIFI VARS ---------------
 const char* ssid = "TP-Link_A36A";
 const char* password = "codner1234";
 
 
+//---------- PIN VARS ---------------
+const int pin_36 = 36;
+const int pin_37 = 37;
+const int pin_38 = 38;
+const int pin_39 = 39;
+
+const int pin_13 = 13;
+
+//--------------------------- BOARD SETUP -----------------------------
 void setup() {
 
   //Setup Heltec display
-  pinMode(LED,OUTPUT);
+  pinMode(LED, OUTPUT);
+
+  pinMode(pin_36, OUTPUT);
+  pinMode(pin_37, OUTPUT);
+  pinMode(pin_38, OUTPUT);
+  pinMode(pin_39, OUTPUT);
+
+  pinMode(13, OUTPUT);
+
+  digitalWrite(13, HIGH);
+  delay(500);                       
+  digitalWrite(13, LOW);
   
   Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Enable*/, true /*Serial Enable*/);
   delay(300);
@@ -48,45 +72,53 @@ void setup() {
 
 }
 
-void blinkFlash(int delayedTime){
-  digitalWrite(LED,HIGH);
+//--------------------------- COMMAND FUNCTIONS -----------------------------
+
+void blinkFlash(int pinLEDInt, int delayedTime){
+  digitalWrite(pinLEDInt,HIGH);
   delay(delayedTime);                       
-  digitalWrite(LED,LOW);
-  delay(delayedTime);
+  digitalWrite(pinLEDInt,LOW);
 }
 
+
+//--------------------------- COMMAND EXECUTIONS -----------------------------
 void executeCommands(String id, String cmd){
 
   // Assign required variables
   const String newCmdStatus = "EXECUTED";
 
   //Execute Given Commands
-  if(cmd == "ABC12345"){
-    
-  }else if(cmd == "ABC12346"){
-    blinkFlash(500);  
-  }else if(cmd == "ABC12347"){
-  }else if(cmd == "ABC12348"){
-    blinkFlash(1000);  
-  }else if(cmd == "ABC12349"){
-  }else if(cmd == "ABC12350"){
-    blinkFlash(500);                      
-  }else if(cmd == "ABC12351"){
-  }else if(cmd == "ABC12352"){
-  }else if(cmd == "ABC12353"){
-  }else if(cmd == "ABC12354"){
-  }else if(cmd == "fd35bd0bea"){
-  }else if(cmd == "0"){
-    
+  if(cmd == "ABC12345"){ // MOVE_UP
+    blinkFlash(pin_36, 500);
+  }else if(cmd == "ABC12346"){ // MOVE_DOWN
+    blinkFlash(pin_37, 500); 
+  }else if(cmd == "ABC12347"){ // MOVE_LEFT
+    blinkFlash(pin_38, 500);
+  }else if(cmd == "ABC12348"){ // MOVE_RIGHT
+    blinkFlash(pin_39, 500);
+  }else if(cmd == "ABC12349"){ // VIBRATE_DEFAULT
+  }else if(cmd == "ABC12350"){ // BLINK_0            
+  }else if(cmd == "ABC12351"){ // JUMP_0
+  }else if(cmd == "ABC12352"){ // WAIT_0
+  }else if(cmd == "ABC12353"){ // SCAN_0
+  }else if(cmd == "ABC12354"){ // SIGNAL_0
+  }else if(cmd == "fd35bd0bea"){ // GRAB_0
+  }else if(cmd == "0"){ // DO NOTHING
+    blinkFlash(LED, 500);
   }
 
   //Update Status of given commands
   //<patch commands go here>
 }
 
+//---------------------------MAIN LOOP-----------------------------
 void loop() {
+
+  
+
+  
   if(WiFi.status() == WL_CONNECTED){
-    long rnd = random(1, 10);
+    
     const char* robot_id = "a4b28d8e1c";
     HTTPClient client;
 
@@ -110,17 +142,30 @@ void loop() {
         const char* cmd_an_id = elem["cmd_an_id"]; 
         const char* cmd_exec_name = elem["cmd_exec_name"]; 
 
-        executeCommands("Test_ID", String(cmd_exec_name));
+        executeCommands(String(cmd_an_id), String(cmd_exec_name));
        
         Serial.println(String(cmd_an_id) + "\n");
+
+        // -------- OTHER STATS WHEN SUCCESSFUL -------
         delay(90);   
+        Serial.println("WIFI Status: " + String(WiFi.status()));
+        Serial.println("HTTP CODE: " +String(httpCode) + "\n");
+
+        digitalWrite(13, HIGH);
+        delay(500);                       
+        digitalWrite(13, LOW);
       }
       
       client.end();
       
       
     }else{
+       // -------- OTHER STATS WHEN FAILURES -------
        Serial.println("Error on HTTP request.");
+
+       Serial.println("WIFI Status: " + String(WiFi.status()));
+       Serial.println("HTTP CODE: " + String(httpCode) + "\n");
+       
     }
     
   }else{
