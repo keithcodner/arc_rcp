@@ -78,11 +78,14 @@ void setup() {
 void blinkFlash(int pinLEDInt, int delayedTime){
   digitalWrite(pinLEDInt,HIGH);
   delay(delayedTime);                       
-  digitalWrite(pinLEDInt,LOW);
+  digitalWrite(pinLEDInt,LOW); 
 }
 
 void getAtmosph(int pinLEDInt, int delayedTime){
 
+    Heltec.display -> drawString(6, 6*9, "Fetching....");
+    Heltec.display -> display();
+    delay(500);
     Heltec.display -> drawString(6, 6*9, "Hum: " + String((float)DHT.humidity) + " / Temp: " + String((float)DHT.temperature));
     Heltec.display -> display();
 
@@ -97,7 +100,8 @@ void getAtmosph(int pinLEDInt, int delayedTime){
 
 void updateCommandExecutions(int commandID, String newStatus){
   HTTPClient client;
-  client.begin("http://localhost:3000/api/arc_db/arc_cmd_table/cmd_id/"+String(commandID));
+  String link = "http://lonaris.ca:3000/api/arc_db/arc_cmd_table/cmd_id/"+String(commandID);
+  client.begin(link);
   client.addHeader("Content-Type", "application/json");
 
   const size_t CAPACITY = JSON_OBJECT_SIZE(2);
@@ -106,12 +110,12 @@ void updateCommandExecutions(int commandID, String newStatus){
   JsonObject obj = doc.to<JsonObject>();
 
   obj["cmd_status"] = newStatus;
-  obj["cmd_date_executed"] = "2021-05-05T00:00:00.000Z";
+  obj["cmd_date_executed"] = "2021-05-05 01:00:00";
 
   serializeJson(doc, jsonOutput);
-  int httpCode = client.PATCH(String(jsonOutput));
+  int httpCode = client.PUT(String(jsonOutput));
 
-   //Serial.println(jsonOutput + "\n Http code: " + String(httpCode));
+   Serial.println(String(jsonOutput) + "\n Http patch code: " + String(httpCode) + "\n Link: " + link + "\n ");
   
 }
 
@@ -183,7 +187,7 @@ void loop() {
 
         // -------- UPDATE COMMAND STATUS -------
 
-        updateCommandExecutions(int(cmd_id), newCmdStatus);
+        updateCommandExecutions(elem["cmd_id"], newCmdStatus);
 
         // -------- OTHER STATS WHEN SUCCESSFUL -------
         delay(90);   
@@ -211,6 +215,6 @@ void loop() {
     Heltec.display -> display();
   }
 
-  delay(5000);
+  delay(1000);
 
 }
