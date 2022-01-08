@@ -4,8 +4,8 @@ import axios from 'axios'
 export const btnStyle = 'bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded'
 
 //------------------APP SETTINGS -----------------------------
-export const api_domain = 'localhost',
- api_port = '3000',
+export const api_domain = 'arc.lonaris.ca',
+ api_port = '81',
  api_http = 'http://',
  api_mid_prefix1 = '/api/arc_db/'
 
@@ -59,8 +59,13 @@ export const arc_c_usrs__GET = api_http+api_domain+':'+api_port+api_mid_prefix1+
 //------------------ASYNC FUNCTIONS-----------------------------
 export async function postArcData(apiLink, data){
     try{
+    const headers = {
+       'Content-Type': 'application/json'
+    }
         axios
-            .post(apiLink, data)
+            .post(apiLink, data, {
+              headers: headers
+            })
             .then(response => {
                 console.log(response)
             })

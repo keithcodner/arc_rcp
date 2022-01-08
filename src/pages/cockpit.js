@@ -60,8 +60,8 @@ function Cockpit(){
         cmd_op1 : "0",
         cmd_op2 : "0",
         cmd_op3 : "0",
-        cmd_date_created : "0",
-        cmd_date_executed : "0"
+        cmd_date_created : "1970-01-01 00:00:00",
+        cmd_date_executed : "1970-01-01 00:00:00"
     })   
     const [idContainer, setIDContainer] = useState({
         ctrl_id : "0",
@@ -180,7 +180,7 @@ function Cockpit(){
                     cmd_op2 : prevState = op2,
                     cmd_op3 : prevState = op3,
                     cmd_date_created : prevState = getCurrDateTime(),
-                    cmd_date_executed : prevState = "0000-00-00 00:00:00"
+                    cmd_date_executed : prevState = "1970-01-01 00:00:00"
                 }
             })
 
@@ -192,7 +192,7 @@ function Cockpit(){
 
     async function handleControllerClick(event) {
 
-        const controllerID = event.target.attributes.data1.value
+        const controllerID = event.target.attributes[1].value
         const mappedKey = controllerMap
         
         if(controllerID === 'ctrl_arrow_up'){
@@ -270,6 +270,7 @@ function Cockpit(){
         // API request to get controller data
         const resp_selected_controller = await fetch(arc_ctrl_table__AN_GET_By_C_User+event.target.value)
         const selected_data_controller = await resp_selected_controller.json()
+        
 
         setControllerMap(prevState => {
             return { 
@@ -302,6 +303,8 @@ function Cockpit(){
         //Update cosnole
         updateConsoles(controlSelectMessage)
 
+        console.log(selected_data_controller)
+        console.log(controllerMap)
         console.log(idContainer)
     }
     
